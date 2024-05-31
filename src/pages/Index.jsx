@@ -2,7 +2,7 @@ import { Container, Text, VStack, Input, Button, Box, Heading } from "@chakra-ui
 import { useState } from "react";
 
 const Index = () => {
-  const [city, setCity] = useState("");
+  const [location, setLocation] = useState("");
   const [weather, setWeather] = useState(null);
   const [error, setError] = useState(null);
 
@@ -10,9 +10,9 @@ const Index = () => {
     setError(null);
     setWeather(null);
     try {
-      const response = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=YOUR_API_KEY&units=metric`);
+      const response = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${location}&appid=YOUR_API_KEY&units=metric`);
       if (!response.ok) {
-        throw new Error("City not found");
+        throw new Error("Location not found");
       }
       const data = await response.json();
       setWeather(data);
@@ -26,9 +26,9 @@ const Index = () => {
       <VStack spacing={4} width="100%">
         <Heading as="h1" size="xl">Weather Forecast</Heading>
         <Input 
-          placeholder="Enter city name" 
-          value={city} 
-          onChange={(e) => setCity(e.target.value)} 
+          placeholder="Enter location" 
+          value={location} 
+          onChange={(e) => setLocation(e.target.value)} 
           size="lg"
         />
         <Button onClick={fetchWeather} colorScheme="blue" size="lg">Get Weather</Button>
