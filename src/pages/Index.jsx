@@ -1,12 +1,13 @@
 import { Container, Text, VStack, Input, Button, Box, Heading } from "@chakra-ui/react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 const Index = () => {
   const [location, setLocation] = useState("");
   const [weather, setWeather] = useState(null);
   const [error, setError] = useState(null);
+  const [intervalId, setIntervalId] = useState(null);
 
-  const fetchWeather = async () => {
+  const fetchWeather = async (location) => {
     setError(null);
     setWeather(null);
     try {
@@ -21,6 +22,16 @@ const Index = () => {
     }
   };
 
+  useEffect(() => {
+    if (location) {
+      const id = setInterval(() => {
+        fetchWeather(location);
+      }, 300000);
+      setIntervalId(id);
+      return () => clearInterval(id);
+    }
+  }, [location]);
+
   return (
     <Container centerContent maxW="container.md" height="100vh" display="flex" flexDirection="column" justifyContent="center" alignItems="center">
       <VStack spacing={4} width="100%">
@@ -31,7 +42,7 @@ const Index = () => {
           onChange={(e) => setLocation(e.target.value)} 
           size="lg"
         />
-        <Button onClick={fetchWeather} colorScheme="blue" size="lg">Get Weather</Button>
+        <Button onClick={() => fetchWeather(location)} colorScheme="blue" size="lg">Get Weather</Button>
         {error && <Text color="red.500">{error}</Text>}
         {weather && (
           <Box p={4} borderWidth={1} borderRadius="lg" width="100%" textAlign="center">
